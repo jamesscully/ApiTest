@@ -14,6 +14,9 @@ public class SupplierAPI {
     public static final String   SUP_ERIC  = "eric/";
     public static final String   SUP_JEFF  = "jeff/";
 
+    // connection timeout in seconds
+    public static final int CONNECTION_TIMEOUT = 1;
+
     /**
      * Returns the JSON result from a supplier
      * @param supplier The suppliers endpoint from SUP_DAVE, SUP_ERIC or SUP_JEFF
@@ -25,13 +28,30 @@ public class SupplierAPI {
     public static void query(String supplier, double pLat, double pLng, double dLat, double dLng) {
         String endpoint   = API_BASE + supplier;
         String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
-        
+
         try {
             URL url = new URL(endpoint + parameters);
 
+            // create a HTTP connection to the server; we can modify properties here
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setConnectTimeout(CONNECTION_TIMEOUT * 1000);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            String line = "";
+
+            while((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
 
         } catch (MalformedURLException e) {
             System.err.println("Malformed url: " + endpoint + parameters);
+            e.printStackTrace();
+        } catch (SocketTimeoutException e) {
+            System.err.println("Timed out connecting to url: " + endpoint);
+        } catch (IOException e) {
+            System.err.println("Error connecting to url: " + endpoint);
             e.printStackTrace();
         }
 
