@@ -15,7 +15,7 @@ public class SupplierAPI {
     public static final String   SUP_JEFF  = "jeff/";
 
     // connection timeout in seconds
-    public static final int CONNECTION_TIMEOUT = 1;
+    public static final int CONNECTION_TIMEOUT = 2;
 
     /**
      * Returns the JSON result from a supplier
