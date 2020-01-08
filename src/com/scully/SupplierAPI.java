@@ -25,9 +25,11 @@ public class SupplierAPI {
      * @param dLat Dropoff Latitude
      * @param dLng Dropoff Longitude
      */
-    public static void query(String supplier, double pLat, double pLng, double dLat, double dLng) {
+    public static SupplierResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
         String endpoint   = API_BASE + supplier;
         String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
+
+        StringBuilder outputJson = new StringBuilder();
 
         try {
             URL url = new URL(endpoint + parameters);
@@ -39,10 +41,10 @@ public class SupplierAPI {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
+            // whilst most JSON is a simple one-line; it's possible some day it might change.
             String line = "";
-
             while((line = reader.readLine()) != null) {
-                System.out.println(line);
+                outputJson.append(line);
             }
 
         } catch (MalformedURLException e) {
@@ -54,6 +56,8 @@ public class SupplierAPI {
             System.err.println("Error connecting to url: " + endpoint);
             e.printStackTrace();
         }
+
+        return new SupplierResult(outputJson.toString());
 
     }
 
