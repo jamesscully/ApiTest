@@ -10,10 +10,10 @@ public enum CarTypeEnum {
     LUXURY_PEOPLE_CARRIER(6),
     MINIBUS(16);
 
-    private final int MAX;
+    public final int CAPACITY;
 
     CarTypeEnum(int MAX) {
-        this.MAX = MAX;
+        this.CAPACITY = MAX;
     }
 
     public static CarTypeEnum Factory(String in) {

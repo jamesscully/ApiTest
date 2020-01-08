@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /* Example JSON pretty-printed:
 {
@@ -33,22 +34,16 @@ public class SupplierResult {
     private String dropoffLocation = "";
 
     // since the car type should be unique, we can store it as <type,price>
-    private HashMap<String,Integer> tripOptions = new HashMap<>();
+    private HashMap<CarTypeEnum,Integer> tripOptions = new HashMap<>();
 
     public SupplierResult(String response) {
         try {
             // contains all of the returned JSON
             JSONObject json = new JSONObject(response);
 
-            System.out.println(json);
-
             supplierName    = json.getString("supplier_id");
             pickupLocation  = json.getString("pickup");
             dropoffLocation = json.getString("dropoff");
-
-            System.out.println(
-                    String.format("Read from JSON:\n\tSupplier: %s\n\tPickup: %s\n\tDropoff: %s", supplierName, pickupLocation, dropoffLocation)
-            );
 
             JSONArray options = (JSONArray) json.get("options");
 
@@ -56,12 +51,8 @@ public class SupplierResult {
                 // the current key-value pair we're looking at, i.e. {"car_type":"STANDARD","price":370137}
                 JSONObject obj = options.getJSONObject(i);
 
-                String carType = obj.getString("car_type");
+                CarTypeEnum carType = CarTypeEnum.Factory(obj.getString("car_type"));
                 Integer price   = obj.getInt("price");
-
-                System.out.println(
-                        String.format("Adding CarType: %s with a price of: %d to HashMap", carType, price)
-                );
 
                 tripOptions.put(carType, price);
             }
@@ -70,5 +61,32 @@ public class SupplierResult {
             e.printStackTrace();
         }
     }
+
+    public void printOptions(int passengers) {
+
+        System.out.println("Options for this trip:");
+
+        // in the case that we don't have any available types
+        boolean availableType = false;
+
+        for(Map.Entry<CarTypeEnum, Integer> entry : tripOptions.entrySet()) {
+
+            CarTypeEnum type  = entry.getKey();
+                    int price = entry.getValue();
+
+            // if our car-type doesn't have the space, skip it
+            if(type.CAPACITY < passengers)
+                continue;
+
+            availableType = true;
+
+            System.out.println(
+                    String.format("%s - %s - %s", type, supplierName, price)
+            );
+
+        }
+
+    }
+
 
 }

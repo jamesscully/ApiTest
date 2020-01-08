@@ -35,16 +35,10 @@ public class Main {
             System.exit(1);
         }
 
-        System.out.println("Passenger count: " + passengers);
-
-        System.out.println(
-                String.format("Pickup Location: (%f,%f)", pLat, pLng)
-        );
-        System.out.println(
-                String.format("Dropoff Location: (%f,%f)", dLat, dLng)
-        );
-
         // get Daves result
-        SupplierAPI.query(SupplierAPI.SUP_DAVE, pLat, pLng, dLat, dLng);
+        SupplierResult dave = SupplierAPI.query(SupplierAPI.SUP_DAVE, pLat, pLng, dLat, dLng);
+
+        dave.printOptions(passengers);
+
     }
 }
