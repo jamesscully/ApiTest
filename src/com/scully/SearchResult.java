@@ -49,38 +49,16 @@ public class SearchResult {
                 tripOptions.put(carType, price);
             }
 
+            availableJourney = true;
+
         } catch (JSONException e) {
             System.err.println("Error parsing JSON from API: ");
             e.printStackTrace();
         }
     }
 
-    /**
-     * Prints the options in TYPE - SUPPLIER - PRICE format
-     * @param passengers Amount of needed space; n <= 0 prints all options
-     */
-    public void printOptions(int passengers) {
-
-        for(Map.Entry<CarType, Integer> entry : tripOptions.entrySet()) {
-
-            CarType type  = entry.getKey();
-                    int price = entry.getValue();
-
-            // if our car-type doesn't have the space, skip it
-            if(type.CAPACITY < passengers)
-                continue;
-
-            availableJourney = true;
-
-            System.out.println(
-                    String.format("%s - %s - %s", type, supplierName, price)
-            );
-        }
-        
-        // prevent this being printed if we received a code 500
-        if(!availableJourney && !supplierName.equals("")) {
-            System.out.println("No available journeys for supplier " + supplierName);
-        }
+    public HashMap<CarType, Integer> getTripOptions() {
+        return tripOptions;
     }
 
     public boolean hasType(CarType e) {

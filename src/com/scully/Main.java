@@ -50,7 +50,7 @@ public class Main {
     public static void getCheapests(SearchResult... suppliers) {
         // reduces the need to go over un-needed types
         ArrayList<CarType> types = CarType.getApplicableTypes(passengers);
-        
+
         // find the cheapest journey for a car type from all suppliers
         for(CarType c : types) {
 
