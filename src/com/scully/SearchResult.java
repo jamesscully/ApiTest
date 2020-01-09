@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents data retrieved from the API requests
@@ -16,7 +15,7 @@ public class SearchResult {
     public String pickupLocation  = "";
     public String dropoffLocation = "";
 
-    boolean availableJourney = false;
+    boolean errorCreating = true;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
@@ -49,7 +48,7 @@ public class SearchResult {
                 tripOptions.put(carType, price);
             }
 
-            availableJourney = true;
+            errorCreating = false;
 
         } catch (JSONException e) {
             System.err.println("Error parsing JSON from API: ");
