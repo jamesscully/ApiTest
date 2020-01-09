@@ -29,14 +29,20 @@ import java.util.Map;
 /** This class acts as a model for the returned json **/
 public class SupplierResult {
 
-    private String supplierName    = "";
-    private String pickupLocation  = "";
-    private String dropoffLocation = "";
+    String supplierName    = "";
+    String pickupLocation  = "";
+    String dropoffLocation = "";
+
+    boolean availableJourney = false;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarTypeEnum,Integer> tripOptions = new HashMap<>();
 
     public SupplierResult(String response) {
+
+        if(response.isEmpty())
+            return;
+
         try {
             // contains all of the returned JSON
             JSONObject json = new JSONObject(response);
@@ -62,12 +68,11 @@ public class SupplierResult {
         }
     }
 
+    /**
+     * Prints the options in TYPE - SUPPLIER - PRICE format
+     * @param passengers Amount of needed space; n <= 0 prints all options
+     */
     public void printOptions(int passengers) {
-
-        System.out.println("Options for this trip:");
-
-        // in the case that we don't have any available types
-        boolean availableType = false;
 
         for(Map.Entry<CarTypeEnum, Integer> entry : tripOptions.entrySet()) {
 
@@ -78,12 +83,16 @@ public class SupplierResult {
             if(type.CAPACITY < passengers)
                 continue;
 
-            availableType = true;
+            availableJourney = true;
 
             System.out.println(
                     String.format("%s - %s - %s", type, supplierName, price)
             );
 
+        }
+
+        if(!availableJourney) {
+            System.out.println("No available journeys for supplier " + supplierName);
         }
 
     }

@@ -41,6 +41,13 @@ public class SupplierAPI {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
+            int responseCode = connection.getResponseCode();
+
+            if(responseCode != HttpURLConnection.HTTP_OK) {
+                System.err.println("HTTP response code was not OK, ignoring this supplier");
+                return new SupplierResult("");
+            }
+
             // whilst most JSON is a simple one-line; it's possible some day it might change.
             String line = "";
             while((line = reader.readLine()) != null) {
@@ -54,11 +61,11 @@ public class SupplierAPI {
             System.err.println("Timed out connecting to url: " + endpoint);
         } catch (IOException e) {
             System.err.println("Error connecting to url: " + endpoint);
+
             e.printStackTrace();
         }
 
         return new SupplierResult(outputJson.toString());
-
     }
 
 
