@@ -36,7 +36,7 @@ public class Part1B {
             throw e;
         }
 
-        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, pLat, pLng);
+        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng);
 
 
         if(davesResults.errorCreating) {
