@@ -1,36 +1,23 @@
-import com.scully.Main;
-import com.scully.SearchTaxis;
-import com.scully.SearchResult;
+import com.scully.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class MainTest {
 
-    String[] VALID_ARGS = new String[] {"51", "1", "51", "2"};
+    String[] INVALID_ARGS_NOPASSENGERS = new String[] {"51", "1", "51", "2aaaa"};
+    String[] INVALID_ARGS_PASSENGERS = new String[] {"51", "1", "51", "2", "5aaaa"};
 
     @Test
     public void testArgs() {
-        assertThrows(IllegalArgumentException.class, () -> Main.main(new String[] {"invalid"}));
-        assertThrows(NumberFormatException.class, () -> Main.main(new String[] {
-                "51", "1",
-                "51aaa", "2"
-        }));
-    }
+        assertThrows(IllegalArgumentException.class, () -> Part1A.main(new String[] {"invalid"}));
+        assertThrows(IllegalArgumentException.class, () -> Part1B.main(new String[] {"invalid"}));
+        assertThrows(IllegalArgumentException.class, () -> Part1C.main(new String[] {"invalid"}));
 
-    // check that our parameters passed in are being presented to and received from the API properly
-    @Test
-    public void testParamsPassed() {
-        SearchResult testOne = SearchTaxis.query(SearchTaxis.SUP_DAVE, 50, 50, 40, 40);
-
-        // quite redundant, but hardcoding here would cause a headache if source changed
-        assertEquals(testOne.supplierName, SearchTaxis.SUP_DAVE);
-
-        // using simple integers - floating point precision would make this very difficult
-        assertEquals(testOne.pickupLocation, "" + 50 + "," + 50);
-        assertEquals(testOne.dropoffLocation, "" + 40 + "," + 40);
+        assertThrows(NumberFormatException.class, () -> Part1A.main(INVALID_ARGS_NOPASSENGERS));
+        assertThrows(NumberFormatException.class, () -> Part1B.main(INVALID_ARGS_PASSENGERS));
+        assertThrows(NumberFormatException.class, () -> Part1C.main(INVALID_ARGS_PASSENGERS));
 
     }
-
 
 }
