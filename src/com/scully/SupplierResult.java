@@ -88,13 +88,19 @@ public class SupplierResult {
             System.out.println(
                     String.format("%s - %s - %s", type, supplierName, price)
             );
-
         }
 
         if(!availableJourney) {
             System.out.println("No available journeys for supplier " + supplierName);
         }
+    }
 
+    public boolean hasType(CarTypeEnum e) {
+        return tripOptions.containsKey(e);
+    }
+
+    public int getPriceByType(CarTypeEnum e) {
+        return tripOptions.get(e);
     }
 
 

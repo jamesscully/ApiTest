@@ -1,5 +1,8 @@
 package com.scully;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 // each enum corresponds to the maximum amount of people it can carry; should attempt to add comparator here
 public enum CarTypeEnum {
 
@@ -34,5 +37,17 @@ public enum CarTypeEnum {
             default:
                 throw new IllegalArgumentException("Could not parse car type: " + in);
         }
+    }
+
+    public static ArrayList<CarTypeEnum> getApplicableTypes(int passengers) {
+        ArrayList<CarTypeEnum> cheapests = new ArrayList<>();
+
+        for(CarTypeEnum c : CarTypeEnum.values()) {
+            if(c.CAPACITY > passengers) {
+                cheapests.add(c);
+            }
+        }
+
+        return cheapests;
     }
 }
