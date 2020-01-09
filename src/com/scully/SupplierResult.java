@@ -29,9 +29,9 @@ import java.util.Map;
 /** This class acts as a model for the returned json **/
 public class SupplierResult {
 
-    String supplierName    = "";
-    String pickupLocation  = "";
-    String dropoffLocation = "";
+    public String supplierName    = "";
+    public String pickupLocation  = "";
+    public String dropoffLocation = "";
 
     boolean availableJourney = false;
 
@@ -40,8 +40,10 @@ public class SupplierResult {
 
     public SupplierResult(String response) {
 
-        if(response.isEmpty())
+        if(response.isEmpty()) {
+            System.err.println("Found an empty response");
             return;
+        }
 
         try {
             // contains all of the returned JSON
@@ -89,8 +91,9 @@ public class SupplierResult {
                     String.format("%s - %s - %s", type, supplierName, price)
             );
         }
-
-        if(!availableJourney) {
+        
+        // prevent this being printed if we received a code 500
+        if(!availableJourney && !supplierName.equals("")) {
             System.out.println("No available journeys for supplier " + supplierName);
         }
     }
@@ -102,6 +105,4 @@ public class SupplierResult {
     public int getPriceByType(CarTypeEnum e) {
         return tripOptions.get(e);
     }
-
-
 }

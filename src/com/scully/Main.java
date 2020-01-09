@@ -44,18 +44,12 @@ public class Main {
         SupplierResult eric = SupplierAPI.query(SupplierAPI.SUP_ERIC, pLat, pLng, dLat, dLng);
         SupplierResult jeff = SupplierAPI.query(SupplierAPI.SUP_JEFF, pLat, pLng, dLat, dLng);
 
-        dave.printOptions(passengers);
-        eric.printOptions(passengers);
-        jeff.printOptions(passengers);
-
         getCheapests(dave, eric, jeff);
-
     }
 
     public static void getCheapests(SupplierResult ... suppliers) {
         // reduces the need to go over un-needed types
         ArrayList<CarTypeEnum> types = CarTypeEnum.getApplicableTypes(passengers);
-
 
         System.out.println("%%%%%%%%%%\nFinding cheapest prices");
 
@@ -84,7 +78,7 @@ public class Main {
                 // by here, we should have cheapest price
             }
 
-            // we don't want to print if still using default values
+            // we don't want to print if no one had this type
             if(modified) {
                 System.out.println(
                         String.format("%s - %s - %d", c.toString(), cheapestSupplier, cheapestPrice)

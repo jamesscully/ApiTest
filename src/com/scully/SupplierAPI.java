@@ -60,9 +60,7 @@ public class SupplierAPI {
         } catch (SocketTimeoutException e) {
             System.err.println("Timed out connecting to url: " + endpoint);
         } catch (IOException e) {
-            System.err.println("Error connecting to url: " + endpoint);
-
-            e.printStackTrace();
+            System.err.println("Received server error, ignoring this supplier: " + endpoint);
         }
 
         return new SupplierResult(outputJson.toString());
