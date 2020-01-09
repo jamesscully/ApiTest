@@ -1,10 +1,11 @@
 package com.scully;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-// each enum corresponds to the maximum amount of people it can carry; should attempt to add comparator here
-public enum CarTypeEnum {
+/**
+ * Represents the amount of passengers a car can carry.
+ */
+public enum CarType {
 
     STANDARD(4),
     EXECUTIVE(4),
@@ -15,11 +16,16 @@ public enum CarTypeEnum {
 
     public final int CAPACITY;
 
-    CarTypeEnum(int MAX) {
+    CarType(int MAX) {
         this.CAPACITY = MAX;
     }
 
-    public static CarTypeEnum Factory(String in) {
+    /**
+     * Creates the equivalent CarType from a String
+     * @param in String to convert to a CarType
+     * @return Equivalent CarType
+     */
+    public static CarType Factory(String in) {
         switch (in) {
             case "STANDARD":
                 return STANDARD;
@@ -39,15 +45,20 @@ public enum CarTypeEnum {
         }
     }
 
-    public static ArrayList<CarTypeEnum> getApplicableTypes(int passengers) {
-        ArrayList<CarTypeEnum> cheapests = new ArrayList<>();
+    /**
+     * Returns an ArrayList of car types applicable for N passengers
+     * @param passengers Amount of passengers needed
+     * @return ArrayList of capable car types
+     */
+    public static ArrayList<CarType> getApplicableTypes(int passengers) {
+        ArrayList<CarType> applicable = new ArrayList<>();
 
-        for(CarTypeEnum c : CarTypeEnum.values()) {
+        for(CarType c : CarType.values()) {
             if(c.CAPACITY > passengers) {
-                cheapests.add(c);
+                applicable.add(c);
             }
         }
 
-        return cheapests;
+        return applicable;
     }
 }

@@ -7,27 +7,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-/* Example JSON pretty-printed:
-{
-  "supplier_id": "DAVE",
-  "pickup": "51,1",
-  "dropoff": "51,2",
-  "options": [
-    {
-      "car_type": "EXECUTIVE",
-      "price": 536312
-    },
-    {
-      "car_type": "LUXURY",
-      "price": 14249
-    }
-  ]
-}
+/**
+ * Represents data retrieved from the API requests
  */
-
-
-/** This class acts as a model for the returned json **/
-public class SupplierResult {
+public class SearchResult {
 
     public String supplierName    = "";
     public String pickupLocation  = "";
@@ -36,12 +19,13 @@ public class SupplierResult {
     boolean availableJourney = false;
 
     // since the car type should be unique, we can store it as <type,price>
-    private HashMap<CarTypeEnum,Integer> tripOptions = new HashMap<>();
+    private HashMap<CarType,Integer> tripOptions = new HashMap<>();
 
-    public SupplierResult(String response) {
+    public SearchResult(String response) {
 
+        // provided that hasType is called before getPriceForType this will make the object useless,
+        // which avoids throwing null around.
         if(response.isEmpty()) {
-            System.err.println("Found an empty response");
             return;
         }
 
@@ -59,13 +43,14 @@ public class SupplierResult {
                 // the current key-value pair we're looking at, i.e. {"car_type":"STANDARD","price":370137}
                 JSONObject obj = options.getJSONObject(i);
 
-                CarTypeEnum carType = CarTypeEnum.Factory(obj.getString("car_type"));
+                CarType carType = CarType.Factory(obj.getString("car_type"));
                 Integer price   = obj.getInt("price");
 
                 tripOptions.put(carType, price);
             }
 
         } catch (JSONException e) {
+            System.err.println("Error parsing JSON from API: ");
             e.printStackTrace();
         }
     }
@@ -76,9 +61,9 @@ public class SupplierResult {
      */
     public void printOptions(int passengers) {
 
-        for(Map.Entry<CarTypeEnum, Integer> entry : tripOptions.entrySet()) {
+        for(Map.Entry<CarType, Integer> entry : tripOptions.entrySet()) {
 
-            CarTypeEnum type  = entry.getKey();
+            CarType type  = entry.getKey();
                     int price = entry.getValue();
 
             // if our car-type doesn't have the space, skip it
@@ -98,11 +83,11 @@ public class SupplierResult {
         }
     }
 
-    public boolean hasType(CarTypeEnum e) {
+    public boolean hasType(CarType e) {
         return tripOptions.containsKey(e);
     }
 
-    public int getPriceByType(CarTypeEnum e) {
+    public int getPriceByType(CarType e) {
         return tripOptions.get(e);
     }
 }

@@ -39,28 +39,27 @@ public class Main {
         }
 
         // get Daves result
-        SupplierResult dave = SupplierAPI.query(SupplierAPI.SUP_DAVE, pLat, pLng, dLat, dLng);
+        SearchResult dave = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng);
 
-        SupplierResult eric = SupplierAPI.query(SupplierAPI.SUP_ERIC, pLat, pLng, dLat, dLng);
-        SupplierResult jeff = SupplierAPI.query(SupplierAPI.SUP_JEFF, pLat, pLng, dLat, dLng);
+        SearchResult eric = SearchTaxis.query(SearchTaxis.SUP_ERIC, pLat, pLng, dLat, dLng);
+        SearchResult jeff = SearchTaxis.query(SearchTaxis.SUP_JEFF, pLat, pLng, dLat, dLng);
 
         getCheapests(dave, eric, jeff);
     }
 
-    public static void getCheapests(SupplierResult ... suppliers) {
+    public static void getCheapests(SearchResult... suppliers) {
         // reduces the need to go over un-needed types
-        ArrayList<CarTypeEnum> types = CarTypeEnum.getApplicableTypes(passengers);
-
-        System.out.println("%%%%%%%%%%\nFinding cheapest prices");
-
-        for(CarTypeEnum c : types) {
+        ArrayList<CarType> types = CarType.getApplicableTypes(passengers);
+        
+        // find the cheapest journey for a car type from all suppliers
+        for(CarType c : types) {
 
             String cheapestSupplier = "";
             int    cheapestPrice    = Integer.MAX_VALUE;
 
             boolean modified = false;
 
-            for(SupplierResult supplier : suppliers) {
+            for(SearchResult supplier : suppliers) {
 
                 // nothing to do if we don't have the type
                 if(!supplier.hasType(c))
@@ -74,8 +73,6 @@ public class Main {
                     cheapestPrice    = price;
                     cheapestSupplier = supplier.supplierName;
                 }
-
-                // by here, we should have cheapest price
             }
 
             // we don't want to print if no one had this type

@@ -4,9 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.util.Timer;
 
-public class SupplierAPI {
+public class SearchTaxis {
 
     public static final String   API_BASE = "https://techtest.rideways.com/";
 
@@ -14,7 +13,6 @@ public class SupplierAPI {
     public static final String   SUP_ERIC  = "eric/";
     public static final String   SUP_JEFF  = "jeff/";
 
-    // connection timeout in seconds
     public static final int CONNECTION_TIMEOUT = 2;
 
     /**
@@ -25,7 +23,7 @@ public class SupplierAPI {
      * @param dLat Dropoff Latitude
      * @param dLng Dropoff Longitude
      */
-    public static SupplierResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
+    public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
         String endpoint   = API_BASE + supplier;
         String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
 
@@ -39,16 +37,19 @@ public class SupplierAPI {
 
             connection.setConnectTimeout(CONNECTION_TIMEOUT * 1000);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
             int responseCode = connection.getResponseCode();
 
+            // avoids running into exceptions
             if(responseCode != HttpURLConnection.HTTP_OK) {
-                System.err.println("HTTP response code was not OK, ignoring this supplier");
-                return new SupplierResult("");
+                System.err.println(
+                        String.format("(HTTP Error %d) Unable to connect to API, ignoring %s", responseCode, endpoint)
+                );
+                return new SearchResult("");
             }
 
-            // whilst most JSON is a simple one-line; it's possible some day it might change.
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            // whilst most JSON is one-line; it's possible some day it might change.
             String line = "";
             while((line = reader.readLine()) != null) {
                 outputJson.append(line);
@@ -61,10 +62,10 @@ public class SupplierAPI {
             System.err.println("Timed out connecting to url: " + endpoint);
         } catch (IOException e) {
             System.err.println("Received server error, ignoring this supplier: " + endpoint);
+            e.printStackTrace();
         }
 
-        return new SupplierResult(outputJson.toString());
+        return new SearchResult(outputJson.toString());
     }
-
 
 }
