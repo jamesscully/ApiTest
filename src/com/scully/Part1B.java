@@ -44,7 +44,9 @@ public class Part1B {
             return;
         }
 
-        System.out.println("Results for Dave's Taxis:");
+        System.out.println(
+                String.format("Results for %d passengers with Dave's Taxis:", passengers)
+        );
 
         ArrayList<CarType> validTypes = CarType.getApplicableTypes(passengers);
 

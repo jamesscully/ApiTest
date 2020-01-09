@@ -32,6 +32,7 @@ public class SearchTaxis {
         try {
             URL url = new URL(endpoint + parameters);
 
+            System.out.println("Connecting to " + endpoint);
             // create a HTTP connection to the server; we can modify properties here
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
