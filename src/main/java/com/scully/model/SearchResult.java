@@ -4,7 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents data retrieved from the API requests
@@ -21,7 +23,6 @@ public class SearchResult {
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
 
     public SearchResult(String response) {
-
         // provided that hasType is called before getPriceForType this will make the object useless,
         // which avoids throwing null around.
         if(response.isEmpty()) {
