@@ -1,7 +1,7 @@
-import com.scully.*;
-import org.junit.Test;
+package com.scully;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MainTest {
 
