@@ -17,17 +17,21 @@ public class SearchResult {
     public String pickupLocation  = "";
     public String dropoffLocation = "";
 
+    public int passengers;
+
     public boolean errorCreating = true;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
 
-    public SearchResult(String response) {
+    public SearchResult(String response, int passengers) {
         // provided that hasType is called before getPriceForType this will make the object useless,
         // which avoids throwing null around.
         if(response.isEmpty()) {
             return;
         }
+
+        this.passengers = passengers;
 
         try {
             // contains all of the returned JSON
@@ -44,6 +48,10 @@ public class SearchResult {
                 JSONObject obj = options.getJSONObject(i);
 
                 CarType carType = CarType.Factory(obj.getString("car_type"));
+
+                if(!carType.canHoldPassengers(passengers))
+                    continue;
+
                 Integer price   = obj.getInt("price");
 
                 tripOptions.put(carType, price);
@@ -56,6 +64,7 @@ public class SearchResult {
             e.printStackTrace();
         }
     }
+
 
     public HashMap<CarType, Integer> getTripOptions() {
         return tripOptions;

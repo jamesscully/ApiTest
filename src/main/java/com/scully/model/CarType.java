@@ -45,6 +45,10 @@ public enum CarType {
         }
     }
 
+    public boolean canHoldPassengers(int passengers) {
+        return (CAPACITY >= passengers);
+    }
+
     /**
      * Returns an ArrayList of car types applicable for N passengers
      * @param passengers Amount of passengers needed

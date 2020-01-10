@@ -41,10 +41,10 @@ public class Part1C {
         }
 
         // get Daves result
-        SearchResult dave = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng);
+        SearchResult dave = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng, passengers);
 
-        SearchResult eric = SearchTaxis.query(SearchTaxis.SUP_ERIC, pLat, pLng, dLat, dLng);
-        SearchResult jeff = SearchTaxis.query(SearchTaxis.SUP_JEFF, pLat, pLng, dLat, dLng);
+        SearchResult eric = SearchTaxis.query(SearchTaxis.SUP_ERIC, pLat, pLng, dLat, dLng, passengers);
+        SearchResult jeff = SearchTaxis.query(SearchTaxis.SUP_JEFF, pLat, pLng, dLat, dLng, passengers);
 
         printCheapestSuppliers(dave, eric, jeff);
     }

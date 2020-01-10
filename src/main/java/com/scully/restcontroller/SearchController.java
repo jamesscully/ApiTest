@@ -16,9 +16,34 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "0") String passengers)
     {
-        SearchResult result = SearchTaxis.query(SearchTaxis.SUP_DAVE, 51, 1, 52, 1);
+        return SearchTaxis.query(SearchTaxis.SUP_DAVE, 51, 1, 52, 1, Integer.parseInt(passengers));
+    }
 
-        return result;
+    @RequestMapping("/eric")
+    public SearchResult searchEric(
+            @RequestParam(value = "pickup")                         String pickup,
+            @RequestParam(value = "dropoff")                        String dropoff,
+            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+    {
+        return SearchTaxis.query(SearchTaxis.SUP_ERIC, 51, 1, 52, 1, Integer.parseInt(passengers));
+    }
+
+    @RequestMapping("/jeff")
+    public SearchResult searchJeff(
+            @RequestParam(value = "pickup")                         String pickup,
+            @RequestParam(value = "dropoff")                        String dropoff,
+            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+    {
+        return SearchTaxis.query(SearchTaxis.SUP_JEFF, 51, 1, 52, 1, Integer.parseInt(passengers));
+    }
+
+    @RequestMapping("/search")
+    public SearchResult searchAll(
+            @RequestParam(value = "pickup")                         String pickup,
+            @RequestParam(value = "dropoff")                        String dropoff,
+            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+    {
+        return SearchTaxis.query(SearchTaxis.SUP_JEFF, 51, 1, 52, 1, Integer.parseInt(passengers));
     }
 
 }

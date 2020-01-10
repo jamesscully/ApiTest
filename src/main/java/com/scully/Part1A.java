@@ -13,6 +13,8 @@ public class Part1A {
 
     public static final String ARGS_FORMAT = "pickup_latitude pickup_longitude dropoff_latitude dropoff_longitude";
 
+    public static int passengers = 0;
+
     public static void main(String[] args) {
 
         // test that our number of args is valid, we want either 4 or 5

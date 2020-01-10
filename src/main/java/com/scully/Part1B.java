@@ -40,7 +40,7 @@ public class Part1B {
             throw e;
         }
 
-        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng);
+        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng, passengers);
 
 
         if(davesResults.errorCreating) {

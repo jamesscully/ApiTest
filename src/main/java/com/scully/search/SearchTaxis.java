@@ -25,16 +25,44 @@ public class SearchTaxis {
      * @param dLat Dropoff Latitude
      * @param dLng Dropoff Longitude
      */
+    public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng, int passengers) {
+        String endpoint   = API_BASE + supplier;
+        String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
+
+        try {
+            URL url = new URL(endpoint + parameters);
+            return new SearchResult(getResponseJson(url), passengers);
+        } catch (MalformedURLException e) {
+            System.err.println("URL was malformed: ");
+            e.printStackTrace();
+        }
+
+        // if we've reached here, we've encountered an error
+        return new SearchResult("", passengers);
+    }
+
     public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
         String endpoint   = API_BASE + supplier;
         String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
 
+        try {
+            URL url = new URL(endpoint + parameters);
+            return new SearchResult(getResponseJson(url), 0);
+        } catch (MalformedURLException e) {
+            System.err.println("URL was malformed: ");
+            e.printStackTrace();
+        }
+
+        // if we've reached here, we've encountered an error.
+        return new SearchResult("", 0);
+    }
+
+    private static String getResponseJson(URL url) {
+
         StringBuilder outputJson = new StringBuilder();
 
         try {
-            URL url = new URL(endpoint + parameters);
-
-            System.out.println("Connecting to " + endpoint);
+            System.out.println("Connecting to " + url.toString());
             // create a HTTP connection to the server; we can modify properties here
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -45,9 +73,9 @@ public class SearchTaxis {
             // avoids running into exceptions
             if(responseCode != HttpURLConnection.HTTP_OK) {
                 System.err.println(
-                        String.format("(HTTP Error %d) Unable to connect to API, ignoring %s", responseCode, endpoint)
+                        String.format("(HTTP Error %d) Unable to connect to API, ignoring %s", responseCode, url.toString())
                 );
-                return new SearchResult("");
+                return "";
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -58,17 +86,16 @@ public class SearchTaxis {
                 outputJson.append(line);
             }
 
-        } catch (MalformedURLException e) {
-            System.err.println("Malformed url: " + endpoint + parameters);
-            e.printStackTrace();
         } catch (SocketTimeoutException e) {
-            System.err.println("Timed out connecting to url: " + endpoint);
+            System.err.println("Timed out connecting to url: " + url);
         } catch (IOException e) {
-            System.err.println("Received server error, ignoring this supplier: " + endpoint);
+            System.err.println("Received server error, ignoring this supplier: " + url);
             e.printStackTrace();
         }
 
-        return new SearchResult(outputJson.toString());
+        return outputJson.toString();
     }
+
+
 
 }
