@@ -1,4 +1,4 @@
-package com.scully;
+package com.scully.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,7 @@ public class SearchResult {
     public String pickupLocation  = "";
     public String dropoffLocation = "";
 
-    boolean errorCreating = true;
+    public boolean errorCreating = true;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();

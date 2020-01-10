@@ -1,4 +1,6 @@
-package com.scully;
+package com.scully.search;
+
+import com.scully.model.SearchResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;

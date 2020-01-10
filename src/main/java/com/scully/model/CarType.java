@@ -1,4 +1,4 @@
-package com.scully;
+package com.scully.model;
 
 import java.util.ArrayList;
 

@@ -20,11 +20,13 @@ repositories {
     jcenter()
 }
 
+sourceCompatibility= 1.8
+
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    implementation 'org.json:json:20190722'
+    compile 'org.json:json:20190722'
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
@@ -35,10 +37,41 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'ApiTest.App'
+    mainClassName = 'com.scully.Part1A'
+
+
 }
+
+// declare locations of class files
+def partA = 'com.scully.Part1A'
+def partB = 'com.scully.Part1B'
+def partC = 'com.scully.Part1C'
 
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
+}
+
+task jarPartA(type: org.gradle.jvm.tasks.Jar) {
+    manifest { attributes("Main-Class": partA) }
+    baseName(project.name + '-taskA')
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } with jar
+}
+
+task jarPartB(type: org.gradle.jvm.tasks.Jar) {
+    manifest { attributes("Main-Class": partB) }
+    baseName(project.name + '-taskB')
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } with jar
+}
+
+task jarPartC(type: org.gradle.jvm.tasks.Jar) {
+    manifest { attributes("Main-Class" : partC) }
+    baseName(project.name + '-taskC')
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } with jar
 }

@@ -1,5 +1,9 @@
 package com.scully;
 
+import com.scully.model.CarType;
+import com.scully.model.SearchResult;
+import com.scully.search.SearchTaxis;
+
 import java.util.ArrayList;
 
 /**
