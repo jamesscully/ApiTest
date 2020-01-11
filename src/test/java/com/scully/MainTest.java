@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MainTest {
 
-    String[] INVALID_ARGS_NOPASSENGERS = new String[] {"51", "1", "51", "2aaaa"};
-    String[] INVALID_ARGS_PASSENGERS = new String[] {"51", "1", "51", "2", "5aaaa"};
-    String[] VALID_ARGS = new String[] {"51", "1", "51", "2"};
+    String[] INVALID_ARGS_NOPASSENGERS = new String[] {"51,1", "51,2aaa"};
+    String[] INVALID_ARGS_PASSENGERS = new String[] {"51,1", "51,2", "5aaaa"};
+
+    String[] VALID_ARGS_NOPASSENGERS = new String[] {"51,1", "51,2"};
+    String[] VALID_ARGS_PASSENGERS = new String[] {"51,1", "51,2", "2"};
 
     @Test
     public void testArgs() {
@@ -21,9 +23,15 @@ public class MainTest {
         assertThrows(NumberFormatException.class, () -> Part1B.main(INVALID_ARGS_PASSENGERS));
         assertThrows(NumberFormatException.class, () -> Part1C.main(INVALID_ARGS_PASSENGERS));
 
-        assertDoesNotThrow(() -> Part1A.main(VALID_ARGS));
-        assertDoesNotThrow(() -> Part1B.main(VALID_ARGS));
-        assertDoesNotThrow(() -> Part1C.main(VALID_ARGS));
+        // part A only takes locations, not passengers
+        assertDoesNotThrow(() -> Part1A.main(VALID_ARGS_NOPASSENGERS));
+
+        assertDoesNotThrow(() -> Part1B.main(VALID_ARGS_PASSENGERS));
+        assertDoesNotThrow(() -> Part1B.main(VALID_ARGS_NOPASSENGERS));
+
+
+        assertDoesNotThrow(() -> Part1C.main(VALID_ARGS_PASSENGERS));
+        assertDoesNotThrow(() -> Part1C.main(VALID_ARGS_NOPASSENGERS));
 
     }
 

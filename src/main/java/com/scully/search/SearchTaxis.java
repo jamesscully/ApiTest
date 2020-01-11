@@ -36,7 +36,8 @@ public class SearchTaxis {
             URL url = new URL(endpoint + parameters);
             return new SearchResult(getResponseJson(url), passengers);
         } catch (MalformedURLException e) {
-            System.err.println("URL was malformed: ");
+            // this should only occur if we've messed up, not the user
+            System.err.println("URL was malformed, check SUP_X variables: ");
             e.printStackTrace();
         }
 
@@ -49,29 +50,26 @@ public class SearchTaxis {
     }
 
     public static SearchResult queryAll(Location pickup, Location dropoff, int passengers) {
-        String parameters = getApiParameters(pickup, dropoff);
-
         ArrayList<SearchResult> results = new ArrayList<>();
 
         for(String supplier : ALL_SUPPLIERS) {
-            String endpoint = API_BASE + supplier;
-
-            try {
-                URL url = new URL(endpoint + parameters);
-                SearchResult toAdd = new SearchResult(getResponseJson(url), 0);
-                results.add(toAdd);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            results.add(
+                    query(supplier, pickup, dropoff, passengers)
+            );
         }
 
-        System.out.println("Got passengers: " + passengers);
+        StringBuilder allNames = new StringBuilder();
+
+        for(String s : ALL_SUPPLIERS) {
+            allNames.append(s.substring(0, s.length() - 1)).append(" ");
+        }
+
 
         SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
-        all.pickup(pickup.toString());
-        all.dropoff(dropoff.toString());
-        all.passengers(passengers);
+            all.name(allNames.toString().trim());
+            all.pickup(pickup.toString());
+            all.dropoff(dropoff.toString());
+            all.passengers(passengers);
 
         return all.build();
     }
@@ -95,7 +93,7 @@ public class SearchTaxis {
 
             for(SearchResult supplier : supplierResults) {
 
-
+                // if we don't have the type, or an error occurred, skip this supplier
                 if(!supplier.hasType(type) || supplier.errorCreating) {
                     continue;
                 }
@@ -118,8 +116,6 @@ public class SearchTaxis {
 
         return allSupplier;
     }
-
-
 
     private static String getResponseJson(URL url) {
 

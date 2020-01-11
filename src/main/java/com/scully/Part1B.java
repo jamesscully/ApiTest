@@ -14,26 +14,23 @@ import java.util.Map;
 
 public class Part1B {
 
-    public static final String ARGS_FORMAT = "pickup_latitude pickup_longitude dropoff_latitude dropoff_longitude passengers";
-    public static int passengers = 0;
+    public static final String ARGS_FORMAT = "pickup (51,1), dropoff (51,2), passengers";
+    public static int passengers = 1;
 
     public static void main(String[] args) {
 
-        // test that our number of args is valid, we want either 4 or 5
-        if(args.length != 5) {
+        // test that our number of args is valid, we want 3 or 4
+        if(!(args.length >= 2 && args.length < 4)) {
             throw new IllegalArgumentException("Incorrect number of arguments.\n Argument format: " + ARGS_FORMAT);
         }
 
-        double  pLat = 0.0, pLng = 0.0,
-                dLat = 0.0, dLng = 0.0;
+        Location pickup  = new Location(args[0]);
+        Location dropoff = new Location(args[1]);
 
         try {
-            passengers = Integer.parseInt(args[4]);
 
-            pLat = Double.parseDouble(args[0]);
-            pLng = Double.parseDouble(args[1]);
-            dLat = Double.parseDouble(args[2]);
-            dLng = Double.parseDouble(args[3]);
+            if(args.length > 2)
+                passengers = Integer.parseInt(args[2]);
 
         } catch (NumberFormatException e) {
             System.err.println("Could not parse arguments: ");
@@ -41,11 +38,7 @@ public class Part1B {
             throw e;
         }
 
-        Location pickup  = new Location(pLat, pLng);
-        Location dropoff = new Location(dLat, dLng);
-
         SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pickup, dropoff, passengers);
-
 
         if(davesResults.errorCreating) {
             System.out.println("No results found for Dave's Taxis");
@@ -60,7 +53,7 @@ public class Part1B {
 
         for(Map.Entry<CarType, Integer> entry : davesResults.getTripOptions().entrySet()) {
 
-            CarType carType = CarType.Factory(entry.getKey().toString());
+            CarType carType = entry.getKey();
             int price = entry.getValue();
 
             // ignore those which we can't fit in
@@ -70,13 +63,5 @@ public class Part1B {
 
             System.out.println("\t" + carType + " - " + price);
         }
-
-
-
-
-
-
-
-
     }
 }

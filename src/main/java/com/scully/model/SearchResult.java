@@ -1,5 +1,6 @@
 package com.scully.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,8 @@ import java.util.Map;
 /**
  * Represents data retrieved from the API requests
  */
+
+
 public class SearchResult {
 
     public String supplierName    = "";
@@ -19,11 +22,12 @@ public class SearchResult {
 
     public int passengers;
 
+    // this will be included in json even if we have a correct output - ignore it.
+    @JsonIgnore
     public boolean errorCreating = true;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
-
 
     public SearchResult(String response, int passengers) {
         // provided that hasType is called before getPriceForType this will make the object useless,
@@ -56,7 +60,6 @@ public class SearchResult {
                 Integer price   = obj.getInt("price");
 
                 tripOptions.put(carType, price);
-
             }
 
             errorCreating = false;
@@ -93,8 +96,6 @@ public class SearchResult {
         String dropoffLocation = "";
 
         int passengers;
-
-        boolean errorCreating = false;
 
         // since the car type should be unique, we can store it as <type,price>
         private HashMap<CarType,Integer> tripOptions = new HashMap<>();
