@@ -1,6 +1,7 @@
 package com.scully.restcontroller;
 
 
+import com.scully.model.Location;
 import com.scully.model.SearchResult;
 import com.scully.search.SearchTaxis;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-        return SearchTaxis.query(SearchTaxis.SUP_DAVE, 51, 1, 52, 1, Integer.parseInt(passengers));
+        return SearchTaxis.query(SearchTaxis.SUP_DAVE, new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
 
     @RequestMapping("/eric")
@@ -25,7 +26,10 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-        return SearchTaxis.query(SearchTaxis.SUP_ERIC, 51, 1, 52, 1, Integer.parseInt(passengers));
+
+
+
+        return SearchTaxis.query(SearchTaxis.SUP_ERIC, new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
 
     @RequestMapping("/jeff")
@@ -34,7 +38,7 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-        return SearchTaxis.query(SearchTaxis.SUP_JEFF, 51, 1, 52, 1, Integer.parseInt(passengers));
+        return SearchTaxis.query(SearchTaxis.SUP_JEFF, new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
 
     @RequestMapping("/search")
@@ -44,7 +48,7 @@ public class SearchController {
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
         System.out.println("Got passengers : " + passengers);
-        return SearchTaxis.queryAll(51, 1, 52, 1, Integer.parseInt(passengers));
+        return SearchTaxis.queryAll(new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
 
 }

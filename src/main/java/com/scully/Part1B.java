@@ -1,6 +1,7 @@
 package com.scully;
 
 import com.scully.model.CarType;
+import com.scully.model.Location;
 import com.scully.model.SearchResult;
 import com.scully.search.SearchTaxis;
 
@@ -40,7 +41,10 @@ public class Part1B {
             throw e;
         }
 
-        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pLat, pLng, dLat, dLng, passengers);
+        Location pickup  = new Location(pLat, pLng);
+        Location dropoff = new Location(dLat, dLng);
+
+        SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pickup, dropoff, passengers);
 
 
         if(davesResults.errorCreating) {

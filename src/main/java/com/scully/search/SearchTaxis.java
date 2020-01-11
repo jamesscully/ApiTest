@@ -1,6 +1,7 @@
 package com.scully.search;
 
 import com.scully.model.CarType;
+import com.scully.model.Location;
 import com.scully.model.SearchResult;
 
 import java.io.BufferedReader;
@@ -24,14 +25,12 @@ public class SearchTaxis {
     /**
      * Returns the JSON result from a supplier
      * @param supplier The suppliers endpoint from SUP_DAVE, SUP_ERIC or SUP_JEFF
-     * @param pLat Pickup Latitude
-     * @param pLng Pickup Longitude
-     * @param dLat Dropoff Latitude
-     * @param dLng Dropoff Longitude
+     * @param pickup
+     * @param dropoff
      */
-    public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng, int passengers) {
+    public static SearchResult query(String supplier, Location pickup, Location dropoff, int passengers) {
         String endpoint   = API_BASE + supplier;
-        String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
+        String parameters = getApiParameters(pickup, dropoff);
 
         try {
             URL url = new URL(endpoint + parameters);
@@ -45,14 +44,12 @@ public class SearchTaxis {
         return new SearchResult("", passengers);
     }
 
-    public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
-        return query(supplier, pLat, pLng, dLat, dLng, 1);
+    public static SearchResult query(String supplier, Location pickup, Location dropoff) {
+        return query(supplier, pickup, dropoff, 1);
     }
 
-
-
-    public static SearchResult queryAll(double pLat, double pLng, double dLat, double dLng, int passengers) {
-        String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
+    public static SearchResult queryAll(Location pickup, Location dropoff, int passengers) {
+        String parameters = getApiParameters(pickup, dropoff);
 
         ArrayList<SearchResult> results = new ArrayList<>();
 
@@ -72,16 +69,16 @@ public class SearchTaxis {
         System.out.println("Got passengers: " + passengers);
 
         SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
-        all.pickup(pLat + "," + pLng);
-        all.dropoff(dLat + "," + dLng);
+        all.pickup(pickup.toString());
+        all.dropoff(dropoff.toString());
         all.passengers(passengers);
 
         return all.build();
     }
 
-    public static SearchResult queryAll(double pLat, double pLng, double dLat, double dLng) {
+    public static SearchResult queryAll(Location pickup, Location dropoff) {
         // we can assume that if no passengers set, there's only 1 person riding
-        return queryAll(pLat, pLng, dLat, dLng, 1);
+        return queryAll(pickup, dropoff, 1);
     }
 
     private static SearchResult.Builder findCheapestRides(ArrayList<CarType> typesNeeded,
@@ -106,7 +103,7 @@ public class SearchTaxis {
                 modified = true;
 
                 int price = supplier.getPriceByType(type);
-                
+
                 if(price < cheapestPrice) {
                     cheapestPrice = price;
                     cheapestSupplier = supplier.supplierName;
@@ -161,6 +158,10 @@ public class SearchTaxis {
         }
 
         return outputJson.toString();
+    }
+
+    public static String getApiParameters(Location pickup, Location dropoff) {
+        return String.format("?pickup=%f,%f&dropoff=%f,%f", pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
     }
 
 
