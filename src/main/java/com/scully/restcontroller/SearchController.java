@@ -14,7 +14,7 @@ public class SearchController {
     public SearchResult searchDave(
             @RequestParam(value = "pickup")                         String pickup,
             @RequestParam(value = "dropoff")                        String dropoff,
-            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+            @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
         return SearchTaxis.query(SearchTaxis.SUP_DAVE, 51, 1, 52, 1, Integer.parseInt(passengers));
     }
@@ -23,7 +23,7 @@ public class SearchController {
     public SearchResult searchEric(
             @RequestParam(value = "pickup")                         String pickup,
             @RequestParam(value = "dropoff")                        String dropoff,
-            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+            @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
         return SearchTaxis.query(SearchTaxis.SUP_ERIC, 51, 1, 52, 1, Integer.parseInt(passengers));
     }
@@ -32,7 +32,7 @@ public class SearchController {
     public SearchResult searchJeff(
             @RequestParam(value = "pickup")                         String pickup,
             @RequestParam(value = "dropoff")                        String dropoff,
-            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+            @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
         return SearchTaxis.query(SearchTaxis.SUP_JEFF, 51, 1, 52, 1, Integer.parseInt(passengers));
     }
@@ -41,9 +41,10 @@ public class SearchController {
     public SearchResult searchAll(
             @RequestParam(value = "pickup")                         String pickup,
             @RequestParam(value = "dropoff")                        String dropoff,
-            @RequestParam(value = "passengers", defaultValue = "0") String passengers)
+            @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-        return SearchTaxis.query(SearchTaxis.SUP_JEFF, 51, 1, 52, 1, Integer.parseInt(passengers));
+        System.out.println("Got passengers : " + passengers);
+        return SearchTaxis.queryAll(51, 1, 52, 1, Integer.parseInt(passengers));
     }
 
 }

@@ -24,6 +24,7 @@ public class SearchResult {
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
 
+
     public SearchResult(String response, int passengers) {
         // provided that hasType is called before getPriceForType this will make the object useless,
         // which avoids throwing null around.
@@ -55,6 +56,7 @@ public class SearchResult {
                 Integer price   = obj.getInt("price");
 
                 tripOptions.put(carType, price);
+
             }
 
             errorCreating = false;
@@ -64,7 +66,6 @@ public class SearchResult {
             e.printStackTrace();
         }
     }
-
 
     public HashMap<CarType, Integer> getTripOptions() {
         return tripOptions;
@@ -76,5 +77,59 @@ public class SearchResult {
 
     public int getPriceByType(CarType e) {
         return tripOptions.get(e);
+    }
+
+    private SearchResult(String supplierName, String pickupLocation, String dropoffLocation, int passengers, HashMap<CarType, Integer> tripOptions) {
+        this.supplierName = supplierName;
+        this.pickupLocation = pickupLocation;
+        this.dropoffLocation = dropoffLocation;
+        this.passengers = passengers;
+        this.tripOptions = tripOptions;
+    }
+
+    public static class Builder {
+        String supplierName    = "";
+        String pickupLocation  = "";
+        String dropoffLocation = "";
+
+        int passengers;
+
+        boolean errorCreating = false;
+
+        // since the car type should be unique, we can store it as <type,price>
+        private HashMap<CarType,Integer> tripOptions = new HashMap<>();
+
+        public Builder() {
+            passengers = 0;
+        }
+
+        public Builder name(String name) {
+            this.supplierName = name;
+            return this;
+        }
+
+        public Builder pickup(String pickup) {
+            this.pickupLocation = pickup;
+            return this;
+        }
+
+        public Builder dropoff(String dropoff) {
+            this.dropoffLocation = dropoff;
+            return this;
+        }
+
+        public Builder passengers(int passengers) {
+            this.passengers = passengers;
+            return this;
+        }
+
+        public Builder option(CarType type, int price) {
+            this.tripOptions.put(type, price);
+            return this;
+        }
+
+        public SearchResult build() {
+            return new SearchResult(supplierName, pickupLocation, dropoffLocation, passengers, tripOptions);
+        }
     }
 }

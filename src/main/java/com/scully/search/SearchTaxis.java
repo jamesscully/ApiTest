@@ -1,11 +1,13 @@
 package com.scully.search;
 
+import com.scully.model.CarType;
 import com.scully.model.SearchResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.ArrayList;
 
 public class SearchTaxis {
 
@@ -14,6 +16,8 @@ public class SearchTaxis {
     public static final String   SUP_DAVE  = "dave/";
     public static final String   SUP_ERIC  = "eric/";
     public static final String   SUP_JEFF  = "jeff/";
+
+    public static final String[] ALL_SUPPLIERS =  {SUP_DAVE, SUP_ERIC, SUP_JEFF};
 
     public static final int CONNECTION_TIMEOUT = 2;
 
@@ -42,20 +46,83 @@ public class SearchTaxis {
     }
 
     public static SearchResult query(String supplier, double pLat, double pLng, double dLat, double dLng) {
-        String endpoint   = API_BASE + supplier;
+        return query(supplier, pLat, pLng, dLat, dLng, 1);
+    }
+
+
+
+    public static SearchResult queryAll(double pLat, double pLng, double dLat, double dLng, int passengers) {
         String parameters = String.format("?pickup=%f,%f&dropoff=%f,%f", pLat, pLng, dLat, dLng);
 
-        try {
-            URL url = new URL(endpoint + parameters);
-            return new SearchResult(getResponseJson(url), 0);
-        } catch (MalformedURLException e) {
-            System.err.println("URL was malformed: ");
-            e.printStackTrace();
+        ArrayList<SearchResult> results = new ArrayList<>();
+
+        for(String supplier : ALL_SUPPLIERS) {
+            String endpoint = API_BASE + supplier;
+
+            try {
+                URL url = new URL(endpoint + parameters);
+                SearchResult toAdd = new SearchResult(getResponseJson(url), 0);
+                results.add(toAdd);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
 
-        // if we've reached here, we've encountered an error.
-        return new SearchResult("", 0);
+        System.out.println("Got passengers: " + passengers);
+
+        SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
+        all.pickup(pLat + "," + pLng);
+        all.dropoff(dLat + "," + dLng);
+        all.passengers(passengers);
+
+        return all.build();
     }
+
+    public static SearchResult queryAll(double pLat, double pLng, double dLat, double dLng) {
+        // we can assume that if no passengers set, there's only 1 person riding
+        return queryAll(pLat, pLng, dLat, dLng, 1);
+    }
+
+    private static SearchResult.Builder findCheapestRides(ArrayList<CarType> typesNeeded,
+                                                  ArrayList<SearchResult> supplierResults)
+    {
+        SearchResult.Builder allSupplier = new SearchResult.Builder();
+
+        for(CarType type : typesNeeded) {
+
+            String cheapestSupplier = "";
+            int    cheapestPrice    = Integer.MAX_VALUE;
+
+            boolean modified = false;
+
+            for(SearchResult supplier : supplierResults) {
+
+
+                if(!supplier.hasType(type) || supplier.errorCreating) {
+                    continue;
+                }
+
+                modified = true;
+
+                int price = supplier.getPriceByType(type);
+                
+                if(price < cheapestPrice) {
+                    cheapestPrice = price;
+                    cheapestSupplier = supplier.supplierName;
+                }
+            }
+
+            // by here, we've found the cheapest supplier for this type
+            // if we have modified i.e. found and updated our cheapest prices, then we add it
+            if(modified)
+                allSupplier.option(type, cheapestPrice);
+        }
+
+        return allSupplier;
+    }
+
+
 
     private static String getResponseJson(URL url) {
 
