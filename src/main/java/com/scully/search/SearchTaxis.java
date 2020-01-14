@@ -69,6 +69,7 @@ public class SearchTaxis {
             allNames.append(s.substring(0, s.length() - 1)).append(" ");
         }
 
+        // creates a new SearchResult featuring all supplier names, pickup/dropoff and most importantly, cheapest rides.
         SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
             all.name(allNames.toString().trim());
             all.pickup(pickup.toString());
@@ -88,6 +89,9 @@ public class SearchTaxis {
     {
         SearchResult.Builder allSupplier = new SearchResult.Builder();
 
+
+        // for all car types, search each supplier, update cheapest variables.
+
         for(CarType type : typesNeeded) {
 
             String cheapestSupplier = "NONE";
@@ -101,8 +105,11 @@ public class SearchTaxis {
                 if(!supplier.hasType(type) || supplier.errorCreating)
                     continue;
 
+                // by this point, we're going to modify the cheapest variables.
+                // saves comparing default str,price -> new str,price
                 modified = true;
 
+                // returns the price of the car type
                 int price = supplier.getPriceByType(type);
 
 
@@ -111,15 +118,13 @@ public class SearchTaxis {
                             String.format("DEBUG (comparing): CHEAPEST(%s, %s, PRICE: %d) WITH (%s, %s, PRICE: %d)", type, cheapestSupplier, cheapestPrice, type, supplier.supplierName, price)
                     );
 
-
+                // if we've found a cheaper price, replace!
                 if(price < cheapestPrice) {
 
                     if(SHOW_COMPARISONS)
                         System.out.println(
                                 String.format("DEBUG (comparing): Cheapest supplier for %s is now %s with a price of %d (-%d)", type, supplier.supplierName, price, (cheapestPrice - price))
                         );
-
-
 
                     cheapestPrice = price;
                     cheapestSupplier = supplier.supplierName;
@@ -150,6 +155,7 @@ public class SearchTaxis {
             // create a HTTP connection to the server; we can modify properties here
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+            // by default, 2 seconds. (timeout is measured in milliseconds)
             connection.setConnectTimeout(CONNECTION_TIMEOUT * 1000);
 
             int responseCode = connection.getResponseCode();

@@ -18,7 +18,7 @@ public class SearchResult {
 
     public int passengers;
 
-    // this will be included in json even if we have a correct output - ignore it.
+    // this will be included in json even if we have a correct output (for searching all) - ignore it.
     @JsonIgnore
     public boolean errorCreating = false;
 
@@ -39,6 +39,7 @@ public class SearchResult {
             // contains all of the returned JSON
             JSONObject json = new JSONObject(response);
 
+            // meta-data
             supplierName    = json.getString("supplier_id");
             pickupLocation  = json.getString("pickup");
             dropoffLocation = json.getString("dropoff");
@@ -60,7 +61,6 @@ public class SearchResult {
 
                 tripOptions.put(carType, price);
             }
-
 
         } catch (JSONException e) {
             System.err.println("Error parsing JSON from API: ");

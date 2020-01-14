@@ -16,7 +16,7 @@ These should all be pulled in once gradle is run; ensure that Java 1.8 is instal
 ## Setup
 The project was developed in IntelliJ IDEA Community Edition 2019.3.
 
-**Clone the repository and enter it:**
+**Clone the repository and enter into the project root:**
 
 For Windows and Linux:
 `git clone https://github.com/jamesscully/ApiTest; cd ApiTest` 
@@ -120,7 +120,9 @@ The API's `/search` endpoint is essentially based off of Task1C.java; I've inclu
 
 I've also wrote debug output to stdout (for the server), so you can observe the comparisons and general functionality of it (you can turn this off by setting `SHOW_COMPARISONS` to `false` in SearchTaxis.java @ Line ~28. 
 
+#### JSON
+To parse the JSON returned from the Rideways API, I've used the standard JSON library (org.json in Maven repo). 
 
-
+Spring Boot automatically serializes objects using the Jackson JSON API.
 
 

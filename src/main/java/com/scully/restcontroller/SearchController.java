@@ -4,6 +4,7 @@ package com.scully.restcontroller;
 import com.scully.model.Location;
 import com.scully.model.SearchResult;
 import com.scully.search.SearchTaxis;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

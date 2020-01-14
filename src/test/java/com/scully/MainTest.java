@@ -24,7 +24,7 @@ public class MainTest {
         assertThrows(IllegalArgumentException.class, () -> Part1B.main(new String[] {"invalid"}));
         assertThrows(IllegalArgumentException.class, () -> Part1C.main(new String[] {"invalid"}));
 
-
+        // part A only takes locations, not passengers
         assertThrows(NumberFormatException.class, () -> Part1A.main(INVALID_ARGS_NOPASSENGERS));
 
 
@@ -61,13 +61,41 @@ public class MainTest {
         assertEquals("51.0,42.0", new Location(51, 42).toString());
     }
 
+    @Test
+    public void testCapacities() {
+        /* From technical_test
+        | Car Type              | Maximum passengers |
+        | STANDARD              | 4                  |
+        | EXECUTIVE             | 4                  |
+        | LUXURY                | 4                  |
+        | PEOPLE_CARRIER        | 6                  |
+        | LUXURY_PEOPLE_CARRIER | 6                  |
+        | MINIBUS               | 16                 | */
 
+        // false - just out of boundary
+        assertFalse(CarType.STANDARD.canHoldPassengers(5));
+        assertFalse(CarType.EXECUTIVE.canHoldPassengers(5));
+        assertFalse(CarType.LUXURY.canHoldPassengers(5));
+        assertFalse(CarType.PEOPLE_CARRIER.canHoldPassengers(7));
+        assertFalse(CarType.LUXURY_PEOPLE_CARRIER.canHoldPassengers(7));
+        assertFalse(CarType.MINIBUS.canHoldPassengers(17));
+
+        // truths - just on boundary
+        assertTrue(CarType.STANDARD.canHoldPassengers(4));
+        assertTrue(CarType.EXECUTIVE.canHoldPassengers(4));
+        assertTrue(CarType.LUXURY.canHoldPassengers(4));
+        assertTrue(CarType.PEOPLE_CARRIER.canHoldPassengers(6));
+        assertTrue(CarType.LUXURY_PEOPLE_CARRIER.canHoldPassengers(6));
+        assertTrue(CarType.MINIBUS.canHoldPassengers(16));
+
+
+    }
 
 
     @Test
     public void testCheapest() {
 
-        // create our artificial API responses
+        // create our artificial API responses, we'll be able to definitely say which should be cheapest
         SearchResult.Builder eric = new SearchResult.Builder().name(SearchTaxis.SUP_ERIC).dropoff("51,2").pickup("51,3").passengers(2);;
 
                              eric.option(CarType.EXECUTIVE, 50);
