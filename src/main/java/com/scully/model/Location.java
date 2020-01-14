@@ -17,8 +17,10 @@ public class Location {
             lat = Double.parseDouble(splitLoc[0]);
             lng = Double.parseDouble(splitLoc[1]);
         } catch (NumberFormatException e) {
-            System.err.println("Could not parse location: " + loc);
-            e.printStackTrace();
+            System.err.println("ERROR: Could not parse location: \"" + loc + "\"\n");
+            throw e;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("ERROR: Missing latitude from location: \"" + loc + "\"\n\n");
             throw e;
         }
     }

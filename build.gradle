@@ -32,7 +32,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-
     compile 'org.json:json:20190722'
 
     // Use JUnit Jupiter API for testing.
@@ -47,8 +46,12 @@ application {
     mainClassName = 'com.scully.Main'
 }
 
+// declare locations of class files
+def partA = 'com.scully.Part1A'
+def partB = 'com.scully.Part1B'
+def partC = 'com.scully.Part1C'
+
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
 }
-

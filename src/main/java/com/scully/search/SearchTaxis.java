@@ -25,6 +25,8 @@ public class SearchTaxis {
 
     public static final int CONNECTION_TIMEOUT = 2;
 
+    private static boolean SHOW_COMPARISONS = true;
+
     /**
      * Returns the JSON result from a supplier
      * @param supplier The suppliers endpoint from SUP_DAVE, SUP_ERIC or SUP_JEFF
@@ -88,7 +90,7 @@ public class SearchTaxis {
 
         for(CarType type : typesNeeded) {
 
-            String cheapestSupplier = "";
+            String cheapestSupplier = "NONE";
             int    cheapestPrice    = Integer.MAX_VALUE;
 
             boolean modified = false;
@@ -103,16 +105,37 @@ public class SearchTaxis {
 
                 int price = supplier.getPriceByType(type);
 
+
+                if(SHOW_COMPARISONS)
+                    System.out.println(
+                            String.format("DEBUG (comparing): CHEAPEST(%s, %s, PRICE: %d) WITH (%s, %s, PRICE: %d)", type, cheapestSupplier, cheapestPrice, type, supplier.supplierName, price)
+                    );
+
+
                 if(price < cheapestPrice) {
+
+                    if(SHOW_COMPARISONS)
+                        System.out.println(
+                                String.format("DEBUG (comparing): Cheapest supplier for %s is now %s with a price of %d (-%d)", type, supplier.supplierName, price, (cheapestPrice - price))
+                        );
+
+
+
                     cheapestPrice = price;
                     cheapestSupplier = supplier.supplierName;
                 }
+
+
             }
 
             // by here, we've found the cheapest supplier for this type
             // if we have modified i.e. found and updated our cheapest prices, then we add it
             if(modified)
                 allSupplier.option(type, cheapestPrice);
+
+            // print output if need be
+            if(SHOW_COMPARISONS)
+                System.out.println("DEBUG (comparing): FINISHED SEARCH FOR TYPE " + type + "\n\n");
         }
 
         return allSupplier;
@@ -147,6 +170,7 @@ public class SearchTaxis {
                 outputJson.append(line);
             }
 
+            // these shouldn't throw; they're unpredictable and other suppliers may respond
         } catch (SocketTimeoutException e) {
             System.err.println("Timed out connecting to url: " + url);
         } catch (IOException e) {

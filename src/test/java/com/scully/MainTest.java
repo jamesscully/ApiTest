@@ -24,6 +24,7 @@ public class MainTest {
         assertThrows(IllegalArgumentException.class, () -> Part1B.main(new String[] {"invalid"}));
         assertThrows(IllegalArgumentException.class, () -> Part1C.main(new String[] {"invalid"}));
 
+
         assertThrows(NumberFormatException.class, () -> Part1A.main(INVALID_ARGS_NOPASSENGERS));
 
 

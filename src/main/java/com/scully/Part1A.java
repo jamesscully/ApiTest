@@ -16,7 +16,6 @@ public class Part1A {
     public static final String ARGS_EXAMPLE = "51,1 51,2";
 
     public static int passengers = 1;
-
     public static void main(String[] args) {
 
         // test that our number of args is valid, we want 2
