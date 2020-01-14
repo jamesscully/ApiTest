@@ -26,9 +26,6 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-
-
-
         return SearchTaxis.query(SearchTaxis.SUP_ERIC, new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
 
@@ -47,8 +44,8 @@ public class SearchController {
             @RequestParam(value = "dropoff")                        String dropoff,
             @RequestParam(value = "passengers", defaultValue = "1") String passengers)
     {
-        System.out.println("Got passengers : " + passengers);
         return SearchTaxis.queryAll(new Location(pickup), new Location(dropoff), Integer.parseInt(passengers));
     }
+
 
 }

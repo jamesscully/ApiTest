@@ -12,15 +12,16 @@ import java.util.Map;
  */
 public class Part1A {
 
-    public static final String ARGS_FORMAT = "pickup (51,1), dropoff (51,2)";
+    public static final String ARGS_FORMAT  = "[pickup] 51,1, [dropoff] 51,2";
+    public static final String ARGS_EXAMPLE = "51,1 51,2";
 
     public static int passengers = 1;
 
     public static void main(String[] args) {
 
-        // test that our number of args is valid, we want either 4 or 5
+        // test that our number of args is valid, we want 2
         if(args.length != 2) {
-            throw new IllegalArgumentException("Incorrect number of arguments.\n Argument format: " + ARGS_FORMAT);
+            throw new IllegalArgumentException("Incorrect number of arguments.\n Argument format: " + ARGS_FORMAT + "\n" + "Example: " + ARGS_EXAMPLE);
         }
 
         Location pickup  = new Location(args[0]);

@@ -7,7 +7,10 @@ import com.scully.model.SearchResult;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SearchTaxis {
@@ -64,7 +67,6 @@ public class SearchTaxis {
             allNames.append(s.substring(0, s.length() - 1)).append(" ");
         }
 
-
         SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
             all.name(allNames.toString().trim());
             all.pickup(pickup.toString());
@@ -79,7 +81,7 @@ public class SearchTaxis {
         return queryAll(pickup, dropoff, 1);
     }
 
-    private static SearchResult.Builder findCheapestRides(ArrayList<CarType> typesNeeded,
+    public static SearchResult.Builder findCheapestRides(ArrayList<CarType> typesNeeded,
                                                   ArrayList<SearchResult> supplierResults)
     {
         SearchResult.Builder allSupplier = new SearchResult.Builder();
@@ -94,9 +96,8 @@ public class SearchTaxis {
             for(SearchResult supplier : supplierResults) {
 
                 // if we don't have the type, or an error occurred, skip this supplier
-                if(!supplier.hasType(type) || supplier.errorCreating) {
+                if(!supplier.hasType(type) || supplier.errorCreating)
                     continue;
-                }
 
                 modified = true;
 
@@ -156,6 +157,12 @@ public class SearchTaxis {
         return outputJson.toString();
     }
 
+    /**
+     * Generates the GET parameters
+     * @param pickup
+     * @param dropoff
+     * @return
+     */
     public static String getApiParameters(Location pickup, Location dropoff) {
         return String.format("?pickup=%f,%f&dropoff=%f,%f", pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
     }

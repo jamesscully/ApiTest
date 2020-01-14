@@ -12,11 +12,11 @@ import java.util.ArrayList;
  */
 public class Part1C {
 
-    public static final String ARGS_FORMAT = "pickup (51,1), dropoff (51,2), passengers";
+    public static final String ARGS_FORMAT = "[pickup] 51,1, [dropoff] 51,2, passengers";
     public static int passengers = 1;
 
     public static void main(String[] args) {
-        // test that our number of args is valid, we want 3
+        // test that our number of args is valid, we want 2 or 3
         if(!(args.length >= 2 && args.length < 4)) {
             throw new IllegalArgumentException("Incorrect number of arguments.\n Argument format: " + ARGS_FORMAT);
         }
@@ -46,7 +46,9 @@ public class Part1C {
         // reduces the need to go over un-needed types
         ArrayList<CarType> types = CarType.getApplicableTypes(passengers);
 
-        System.out.println("Found cheapest results: ");
+        System.out.println("Found cheapest results for " + passengers + " passenger(s): ");
+
+
 
         // find the cheapest journey for a car type from all suppliers
         for(CarType c : types) {
@@ -76,4 +78,5 @@ public class Part1C {
             }
         }
     }
+
 }

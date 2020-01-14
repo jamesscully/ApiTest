@@ -14,12 +14,12 @@ import java.util.Map;
 
 public class Part1B {
 
-    public static final String ARGS_FORMAT = "pickup (51,1), dropoff (51,2), passengers";
+    public static final String ARGS_FORMAT = "[pickup] 51,1, [dropoff] 51,2, passengers";
     public static int passengers = 1;
 
     public static void main(String[] args) {
 
-        // test that our number of args is valid, we want 3 or 4
+        // test that our number of args is valid, we want 2 or 3
         if(!(args.length >= 2 && args.length < 4)) {
             throw new IllegalArgumentException("Incorrect number of arguments.\n Argument format: " + ARGS_FORMAT);
         }
@@ -28,7 +28,6 @@ public class Part1B {
         Location dropoff = new Location(args[1]);
 
         try {
-
             if(args.length > 2)
                 passengers = Integer.parseInt(args[2]);
 
@@ -40,6 +39,7 @@ public class Part1B {
 
         SearchResult davesResults = SearchTaxis.query(SearchTaxis.SUP_DAVE, pickup, dropoff, passengers);
 
+        // this flag will be set if we have an error connecting to the server, i.e. error 500
         if(davesResults.errorCreating) {
             System.out.println("No results found for Dave's Taxis");
             return;
@@ -49,6 +49,7 @@ public class Part1B {
                 String.format("Results for %d passengers with Dave's Taxis:", passengers)
         );
 
+        // get the car types needed for our passenger count
         ArrayList<CarType> validTypes = CarType.getApplicableTypes(passengers);
 
         for(Map.Entry<CarType, Integer> entry : davesResults.getTripOptions().entrySet()) {

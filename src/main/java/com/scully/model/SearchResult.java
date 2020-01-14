@@ -5,15 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents data retrieved from the API requests
  */
-
-
 public class SearchResult {
 
     public String supplierName    = "";
@@ -24,7 +20,7 @@ public class SearchResult {
 
     // this will be included in json even if we have a correct output - ignore it.
     @JsonIgnore
-    public boolean errorCreating = true;
+    public boolean errorCreating = false;
 
     // since the car type should be unique, we can store it as <type,price>
     private HashMap<CarType,Integer> tripOptions = new HashMap<>();
@@ -33,6 +29,7 @@ public class SearchResult {
         // provided that hasType is called before getPriceForType this will make the object useless,
         // which avoids throwing null around.
         if(response.isEmpty()) {
+            errorCreating = true;
             return;
         }
 
@@ -52,8 +49,10 @@ public class SearchResult {
                 // the current key-value pair we're looking at, i.e. {"car_type":"STANDARD","price":370137}
                 JSONObject obj = options.getJSONObject(i);
 
+                // create our car-type from the given string in JSON
                 CarType carType = CarType.Factory(obj.getString("car_type"));
 
+                // ignore it if we can't hold it anyway
                 if(!carType.canHoldPassengers(passengers))
                     continue;
 
@@ -62,7 +61,6 @@ public class SearchResult {
                 tripOptions.put(carType, price);
             }
 
-            errorCreating = false;
 
         } catch (JSONException e) {
             System.err.println("Error parsing JSON from API: ");
@@ -90,6 +88,7 @@ public class SearchResult {
         this.tripOptions = tripOptions;
     }
 
+    // used to build the output for multiple suppliers
     public static class Builder {
         String supplierName    = "";
         String pickupLocation  = "";
