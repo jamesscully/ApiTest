@@ -19,14 +19,18 @@ The project was developed in IntelliJ IDEA Community Edition 2019.3.
 **Clone the repository and enter into the project root:**
 
 For Windows and Linux:
+
 `git clone https://github.com/jamesscully/ApiTest; cd ApiTest` 
 
 **Build the project:**
+
 For Windows:
-&nbsp;&nbsp;&nbsp;&nbsp;``./gradlew.bat build``
+
+``./gradlew.bat build``
 
 For Linux:
-&nbsp;&nbsp;&nbsp;&nbsp;``./gradlew build``
+
+``./gradlew build``
 
 <hr>
 
@@ -46,7 +50,8 @@ This shouldn't be a problem within a properly set-up IDE however.
 
 **Move into the build directory**:
 For Windows and Linux:
-&nbsp;&nbsp;&nbsp;&nbsp;``cd build/libs/``
+
+`cd build/libs/`
 
 If all is successful, running `ls` should show ApiTest.jar.
 
@@ -57,6 +62,7 @@ If all is successful, running `ls` should show ApiTest.jar.
 ## Part 1
 
 The following commands are executed in the format of:
+
 `java -jar ApiTest.jar --taskX (pickup) (dropoff) [passengers]`
 
 Task **A** does not take a passengers argument, as I worked though the tasks sequentially before passengers came into play.
@@ -66,22 +72,25 @@ Tasks **B** and **C** however will assume that only one passenger is riding if t
 #### Task A: Console application to print the search results for Dave's Taxis
 
 To print the results for Dave's Taxis:
-&nbsp;&nbsp;&nbsp;&nbsp;`java -jar ApiTest.jar --taskA 51,1 51,2`
+
+`java -jar ApiTest.jar --taskA 51,1 51,2`
 
 
 #### Task B: Console application to filter by number of passengers
 To filter by number of passengers, i.e. 5 passengers: 
-&nbsp;&nbsp;&nbsp;&nbsp;`java -jar ApiTest.jar --taskB 51,1 51,2 5`
+
+`java -jar ApiTest.jar --taskB 51,1 51,2 5`
 
 #### Task C: Console application to find cheapest results from each supplier
 To find the cheapest journeys from each supplier by passengers, i.e. 7:
-&nbsp;&nbsp;&nbsp;&nbsp;`java -jar ApiTest.jar --taskC 51,1 51,2 7`
+
+`java -jar ApiTest.jar --taskC 51,1 51,2 7`
 
 
 ## Part 2
 Firstly, start the webserver by running:
 
-&nbsp;&nbsp;&nbsp;&nbsp;`java -jar ApiTest.jar --server`
+`java -jar ApiTest.jar --server`
 
 There are four main endpoints to choose from: 
 * `/eric`,  `/dave`,  `/jeff` which return results from the respective supplier
@@ -102,16 +111,20 @@ Optionally, you can add a passengers parameter as such:
 which will find rides that are suitable for 5 people.
 
 
-##Tests
+## Tests
 
 You can run tests by executing the following:
+
 **Windows**
-`./gradlew.bat test` 
+
+`./gradlew.bat test`
+
 **Linux**
+
 `./gradlew test`
 
 
-##Notes
+## Notes
 #### Exceptions
 If the program is started with wrong parameters, i.e. 51,aaaaaa 51,2 the program will print **a lot** of stack traces; primarily due to Spring Boot being bundled within the JAR. I've tried to separate error messages from the stack traces as much as possible through line-breaks, but some may remain.
 
