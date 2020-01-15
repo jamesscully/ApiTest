@@ -38,6 +38,8 @@ For Linux:
 
 Example: `org.gradle.java.home=C:\\Program Files\\Java\\jdk-13.0.1\` (escaping backslashes important)
 
+Alternatively set your JAVA_HOME environment variable to point to this location. 
+
 This shouldn't be a problem within a properly set-up IDE however.
 
 <hr>
@@ -67,7 +69,6 @@ Tasks **B** and **C** however will assume that only one passenger is riding if t
 
 To print the results for Dave's Taxis:
 &nbsp;&nbsp;&nbsp;&nbsp;`java -jar ApiTest.jar --taskA 51,1 51,2`
-
 
 #### Task B: Console application to filter by number of passengers
 To filter by number of passengers, i.e. 5 passengers: 
@@ -102,9 +103,10 @@ Optionally, you can add a passengers parameter as such:
 which will find rides that are suitable for 5 people.
 
 
-##Tests
+##Testing
 
-You can run tests by executing the following:
+You can find a test file in in `src/test/java/com/scully/`;
+Running these tests is as follows:
 **Windows**
 `./gradlew.bat test` 
 **Linux**
@@ -116,7 +118,7 @@ You can run tests by executing the following:
 If the program is started with wrong parameters, i.e. 51,aaaaaa 51,2 the program will print **a lot** of stack traces; primarily due to Spring Boot being bundled within the JAR. I've tried to separate error messages from the stack traces as much as possible through line-breaks, but some may remain.
 
 #### Cheapest suppliers
-The API's `/search` endpoint is essentially based off of Task1C.java; I've included a SearchResult builder so that "artifical" API results can be created to test this, as well as generate a SearchResult for ALL suppliers (found in SearchResult.java + MainTest.java). 
+The API's `/search` endpoint is essentially based off of Task1C.java; I've included a SearchResult builder so that "artificial" API results can be created to test this, as well as generate a SearchResult for ALL suppliers (found in SearchResult.java + MainTest.java). 
 
 I've also wrote debug output to stdout (for the server), so you can observe the comparisons and general functionality of it (you can turn this off by setting `SHOW_COMPARISONS` to `false` in SearchTaxis.java @ Line ~28. 
 

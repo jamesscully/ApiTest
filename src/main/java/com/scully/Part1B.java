@@ -31,6 +31,9 @@ public class Part1B {
             if(args.length > 2)
                 passengers = Integer.parseInt(args[2]);
 
+            if(passengers <= 0)
+                passengers = 1;
+
         } catch (NumberFormatException e) {
             System.err.println("Could not parse arguments: ");
             e.printStackTrace();

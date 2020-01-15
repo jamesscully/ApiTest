@@ -37,6 +37,9 @@ public class SearchTaxis {
         String endpoint   = API_BASE + supplier;
         String parameters = getApiParameters(pickup, dropoff);
 
+        if(passengers <= 0)
+            passengers = 1;
+
         try {
             URL url = new URL(endpoint + parameters);
             return new SearchResult(getResponseJson(url), passengers);
@@ -54,6 +57,14 @@ public class SearchTaxis {
         return query(supplier, pickup, dropoff, 1);
     }
 
+
+    /**
+     * Searches all suppliers for the cheapest suppliers of each available car type
+     * @param pickup Pickup location
+     * @param dropoff Dropoff location
+     * @param passengers Amount of passengers
+     * @return SearchResult containing cheapest of rides from each supplier
+     */
     public static SearchResult queryAll(Location pickup, Location dropoff, int passengers) {
         ArrayList<SearchResult> results = new ArrayList<>();
 
@@ -71,66 +82,57 @@ public class SearchTaxis {
 
         // creates a new SearchResult featuring all supplier names, pickup/dropoff and most importantly, cheapest rides.
         SearchResult.Builder all = findCheapestRides(CarType.getApplicableTypes(passengers), results);
-            all.name(allNames.toString().trim());
-            all.pickup(pickup.toString());
-            all.dropoff(dropoff.toString());
-            all.passengers(passengers);
+                             all.name(allNames.toString().trim());
+                             all.pickup(pickup.toString());
+                             all.dropoff(dropoff.toString());
+                             all.passengers(passengers);
 
         return all.build();
     }
 
+    // Invokes above but with a default passenger count of 1
     public static SearchResult queryAll(Location pickup, Location dropoff) {
         // we can assume that if no passengers set, there's only 1 person riding
         return queryAll(pickup, dropoff, 1);
     }
+
+
 
     public static SearchResult.Builder findCheapestRides(ArrayList<CarType> typesNeeded,
                                                   ArrayList<SearchResult> supplierResults)
     {
         SearchResult.Builder allSupplier = new SearchResult.Builder();
 
-
         // for all car types, search each supplier, update cheapest variables.
-
         for(CarType type : typesNeeded) {
-
             String cheapestSupplier = "NONE";
             int    cheapestPrice    = Integer.MAX_VALUE;
 
             boolean modified = false;
 
             for(SearchResult supplier : supplierResults) {
-
                 // if we don't have the type, or an error occurred, skip this supplier
                 if(!supplier.hasType(type) || supplier.errorCreating)
                     continue;
 
                 // by this point, we're going to modify the cheapest variables.
-                // saves comparing default str,price -> new str,price
+                // saves comparing (default str,price) -> (new str,price)
                 modified = true;
 
                 // returns the price of the car type
                 int price = supplier.getPriceByType(type);
 
-
                 if(SHOW_COMPARISONS)
-                    System.out.println(
-                            String.format("DEBUG (comparing): CHEAPEST(%s, %s, PRICE: %d) WITH (%s, %s, PRICE: %d)", type, cheapestSupplier, cheapestPrice, type, supplier.supplierName, price)
-                    );
+                    System.out.println(String.format("DEBUG (comparing): CHEAPEST(%s, %s, PRICE: %d) WITH (%s, %s, PRICE: %d)", type, cheapestSupplier, cheapestPrice, type, supplier.supplierName, price));
 
                 // if we've found a cheaper price, replace!
                 if(price < cheapestPrice) {
-
                     if(SHOW_COMPARISONS)
-                        System.out.println(
-                                String.format("DEBUG (comparing): Cheapest supplier for %s is now %s with a price of %d (-%d)", type, supplier.supplierName, price, (cheapestPrice - price))
-                        );
+                        System.out.println(String.format("DEBUG (comparing): Cheapest supplier for %s is now %s with a price of %d (-%d)", type, supplier.supplierName, price, (cheapestPrice - price)));
 
                     cheapestPrice = price;
                     cheapestSupplier = supplier.supplierName;
                 }
-
-
             }
 
             // by here, we've found the cheapest supplier for this type
@@ -138,7 +140,6 @@ public class SearchTaxis {
             if(modified)
                 allSupplier.option(type, cheapestPrice);
 
-            // print output if need be
             if(SHOW_COMPARISONS)
                 System.out.println("DEBUG (comparing): FINISHED SEARCH FOR TYPE " + type + "\n\n");
         }
@@ -146,8 +147,12 @@ public class SearchTaxis {
         return allSupplier;
     }
 
+    /**
+     * Retrieves JSON payload from a given URL
+     * @param url URL to retrieve JSON from
+     * @return JSON as a String
+     */
     private static String getResponseJson(URL url) {
-
         StringBuilder outputJson = new StringBuilder();
 
         try {
@@ -183,15 +188,14 @@ public class SearchTaxis {
             System.err.println("Received server error, ignoring this supplier: " + url);
             e.printStackTrace();
         }
-
         return outputJson.toString();
     }
 
     /**
      * Generates the GET parameters
-     * @param pickup
-     * @param dropoff
-     * @return
+     * @param pickup Pickup location
+     * @param dropoff Dropoff location
+     * @return GET parameters formatted with pickup/dropoff locations
      */
     public static String getApiParameters(Location pickup, Location dropoff) {
         return String.format("?pickup=%f,%f&dropoff=%f,%f", pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);

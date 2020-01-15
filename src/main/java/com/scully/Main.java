@@ -21,6 +21,9 @@ public class Main {
             case "--server":
                 Task2.main(args);
                 break;
+
+            default:
+                System.err.println("Please specify an option from: --taskA --taskB --taskC --server");
         }
     }
 }

@@ -25,6 +25,9 @@ public class Part1C {
             // we only want this if passengers is passed
             if(args.length > 2)
                 passengers = Integer.parseInt(args[2]);
+
+            if(passengers <= 0)
+                passengers = 1;
         } catch (NumberFormatException e) {
             System.err.println("Could not parse arguments: ");
             e.printStackTrace();
@@ -47,8 +50,6 @@ public class Part1C {
         ArrayList<CarType> types = CarType.getApplicableTypes(passengers);
 
         System.out.println("Found cheapest results for " + passengers + " passenger(s): ");
-
-
 
         // find the cheapest journey for a car type from all suppliers
         for(CarType c : types) {
